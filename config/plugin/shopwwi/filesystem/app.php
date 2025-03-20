@@ -24,12 +24,12 @@ return [
         'public' => [
             'driver' => \Shopwwi\WebmanFilesystem\Adapter\LocalAdapterFactory::class,
             'root' => public_path(),
-            'url' => 'http://127.0.0.1:8787' // 静态文件访问域名
+            'url' => 'http://xbsh.xyz' // 静态文件访问域名
         ],
         'local' => [
             'driver' => \Shopwwi\WebmanFilesystem\Adapter\LocalAdapterFactory::class,
             'root' => runtime_path(),
-            'url' => 'http://127.0.0.1:8787' // 静态文件访问域名
+            'url' => 'http://xbsh.xyz' // 静态文件访问域名
         ],
         'ftp' => [
             'driver' => \Shopwwi\WebmanFilesystem\Adapter\FtpAdapterFactory::class,
