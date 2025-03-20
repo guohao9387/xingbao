@@ -11,9 +11,9 @@ return [
             // 数据库名
             'database' => 'xingbao',
             // 数据库用户名
-            'username' => 'root',
+            'username' => 'xingbao',
             // 数据库密码
-            'password' => 'root',
+            'password' => 'WsBPp5ZT7jiTckBj',
             // 数据库连接端口
             'hostport' => '3306',
             // 数据库连接参数

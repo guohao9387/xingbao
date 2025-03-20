@@ -1,12 +1,12 @@
 {
-	"serverURL": "http://127.0.0.1:8787/admin",
+	"serverURL": "http://xbsh.xyz/admin",
 	"loginTokenName": "adminLoginToken",
 	"logo": {
 		"title": "管理后台",
 		"image": "admin/images/logo.png"
 	},
 	"menu": {
-		"data": "http://127.0.0.1:8787/admin/AdminMenu/getMenuData",
+		"data": "http://xbsh.xyz/admin/AdminMenu/getMenuData",
 		"method": "GET",
 		"accordion": true,
 		"collapse": false,
