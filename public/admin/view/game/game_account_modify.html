@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>创建</title>
+	<link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md12">
+
+			<div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+				<form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+					<input type="text" name="aid" placeholder="请输入" class="layui-input layui-hide">
+					<input type="text" name="gid" placeholder="请输入" class="layui-input layui-hide">
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">游戏类型</label>
+						<div class="layui-input-block">
+							<input type="text" name="game" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">游戏区服</label>
+						<div class="layui-input-block">
+							<input type="text" name="game_server_name" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label required">账户标题</label>
+						<div class="layui-input-block">
+							<textarea name="title" placeholder="必填" class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">单价</label>
+						<div class="layui-input-block">
+							<input type="number" name="sell_price" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">封面图</label>
+						<div class="layui-input-block">
+							<input type="text" name="image" placeholder="请输入" class="layui-input layui-hide">
+							<div class="layui-upload">
+								<button type="button" class="pear-btn pear-btn-primary pear-btn-sm"
+									id="image">上传图片</button>
+								<div class="layui-upload-list">
+									<img class="layui-upload-img" id="image_show" style="height:50px">
+									<p id="image_text"></p>
+								</div>
+								<div style="width: 95px;display: none;" id="image_percent">
+									<div class="layui-progress layui-progress-big" lay-showpercent="yes"
+										lay-filter="image_percent">
+										<div class="layui-progress-bar" lay-percent=""></div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label required">账号描述</label>
+						<div class="layui-input-block">
+							<textarea name="content" placeholder="必填" class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">游戏账号</label>
+						<div class="layui-input-block">
+							<input type="text" name="game_account" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">游戏密码</label>
+						<div class="layui-input-block">
+							<input type="text" name="game_pwd" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否首页显示</label>
+						<div class="layui-input-block">
+							<input type="radio" name="top_status" value="1" title="是">
+							<input type="radio" name="top_status" value="2" title="否">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否官方自营</label>
+						<div class="layui-input-block">
+							<input type="radio" name="self_status" value="1" title="是">
+							<input type="radio" name="self_status" value="2" title="否">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否找回包赔</label>
+						<div class="layui-input-block">
+							<input type="radio" name="back_status" value="1" title="是">
+							<input type="radio" name="back_status" value="2" title="否">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">是否精品</label>
+						<div class="layui-input-block">
+							<input type="radio" name="jing_status" value="1" title="是">
+							<input type="radio" name="jing_status" value="2" title="否">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">商品状态</label>
+						<div class="layui-input-block">
+							<input type="radio" name="status" value="1" title="未审核" >
+							<input type="radio" name="status" value="2" title="已上架" >
+							<input type="radio" name="status" value="3" title="审核失败" >
+							<input type="radio" name="status" value="4" title="用户下架" >
+							<input type="radio" name="status" value="5" title="后台下架" >
+							<input type="radio" name="status" value="6" title="已经售出" >
+
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">微信</label>
+						<div class="layui-input-block">
+							<input type="text" name="weixin" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">QQ</label>
+						<div class="layui-input-block">
+							<input type="text" name="qq" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">电话</label>
+						<div class="layui-input-block">
+							<input type="text" name="tel" placeholder="请输入" class="layui-input" >
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">排序</label>
+						<div class="layui-input-block">
+							<input type="text" name="sort" placeholder="数字越大越靠前" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">创建时间</label>
+						<div class="layui-input-block">
+							<input type="text" name="create_time" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">更新时间</label>
+						<div class="layui-input-block">
+							<input type="text" name="update_time" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+								lay-filter="saveBtn">立即提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['form', 'element', 'tinymce'], function () {
+			var form = layui.form;
+			var element = layui.element;
+
+			var $ = layui.$;
+
+			form.on('submit(saveBtn)', function (data) {
+
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/GameAccount/modifyGameAccount",
+					data: data.field,
+					dataType: "json",
+					success: function (response) {
+						layer.msg(response.msg, { time: 1000 }, function () {
+							if (response.code == 200) {
+								parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭 
+								parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+							}
+						});
+					}
+				});
+
+				return false;
+			});
+
+			$.ajax({
+				type: "post",
+				url: ServerURL + "/GameAccount/getGameAccount",
+				data: { aid: parent.Id },
+				dataType: "json",
+				success: function (response) {
+					if (response.code == 200) {
+						$("#image_show").attr('src', response.data.image);
+						form.val('MyForm', response.data)
+						form.render();
+					} else {
+						layer.msg(response.msg, { time: 3000 }, function () {
+						});
+					}
+				}
+			});
+
+			window.uploadImage($("input[name='image']"), "image", "gameAccount")//上传图片
+
+
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>管理后台</title>
+    <!-- 样 式 文 件 -->
+    <link rel="stylesheet" href="component/pear/css/pear.css" />
+    <link rel="stylesheet" href="admin/css/other/login.css" />
+    <style>
+        .codeImage {
+            width: 125px;
+            height: 45px;
+        }
+    </style>
+</head>
+<!-- 代 码 结 构 -->
+
+<body background="admin/images/background.svg" style="background-size: cover;">
+    <form class="layui-form" action="javascript:void(0);">
+        <div class="layui-form-item">
+            <img class="logo" src="admin/images/logo.png" />
+            <div class="title">System Login</div>
+            <div class="desc">
+                NB
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <input placeholder="账 户   " type="text" name="user_name" lay-verify="required" hover class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <input placeholder="密 码  " type="password" name="password" lay-verify="required" hover
+                class="layui-input" />
+        </div>
+        <div class="layui-form-item">
+            <input placeholder="验证码 : " name="captcha" type="text" hover lay-verify="required"
+                class="code layui-input layui-input-inline" />
+            <img src="admin/images/captcha.gif" class="codeImage" />
+        </div>
+
+        <!-- <div class="layui-form-item">
+            <input type="checkbox" name="" title="记住密码" lay-skin="primary" checked>
+        </div> -->
+        <div class="layui-form-item">
+            <button type="button" class="pear-btn pear-btn-success login" lay-submit lay-filter="login">
+                登 入
+            </button>
+        </div>
+    </form>
+    <!-- 资 源 引 入 -->
+    <script src="component/layui/layui.js"></script>
+    <script src="component/pear/pear.js"></script>
+    <script>
+        layui.use(['form', 'button', 'popup'], function () {
+            var form = layui.form;
+            var button = layui.button;
+            var popup = layui.popup;
+            var $ = layui.$;
+            $(".codeImage").click(function (e) {
+                $(".codeImage").attr('src', ServerURL + '/Admin/captcha?t=' + new Date().getTime());
+            });
+            $(".codeImage").click();
+            // 登 录 提 交
+            form.on('submit(login)', function (data) {
+                /// 登录
+                $.ajax({
+                    type: "post",
+                    url: ServerURL + "/Admin/login",
+                    data: data.field,
+                    dataType: "json",
+                    success: function (response) {
+                        layer.msg(response.msg, { time: 2000 }, function () {
+                            if (response.code == 200) {
+                                localStorage.setItem(LoginTokenName, response.data.login_token);
+                                window.location = '/admin/admin_basic_framework.html';
+                            }
+                        });
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>创建</title>
+	<link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md12">
+
+			<div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+				<form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+					<input type="text" name="cid" class="layui-input layui-hide">
+					<div class="layui-form-item">
+						<label class="layui-form-label">配置名称</label>
+						<div class="layui-input-block">
+							<input type="text" name="key_title" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">配置值</label>
+						<div class="layui-input-block">
+							<input type="text" name="key_value" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">配置描述</label>
+						<div class="layui-input-block">
+							<input type="text" name="key_desc" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">排序</label>
+						<div class="layui-input-block">
+							<input type="text" name="sort" placeholder="请输入" class="layui-input" value="0">
+						</div>
+					</div <div class="layui-form-item">
+
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+								lay-filter="saveBtn">立即提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['form', 'element'], function () {
+			var form = layui.form;
+			var element = layui.element;
+			var $ = layui.$;
+			form.on('submit(saveBtn)', function (data) {
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/SystemConfig/modifySystemConfig",
+					data: data.field,
+					dataType: "json",
+					success: function (response) {
+						layer.msg(response.msg, { time: 1000 }, function () {
+							if (response.code == 200) {
+								parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭 
+								parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+							}
+						});
+					}
+				});
+
+				return false;
+			});
+
+			$.ajax({
+				type: "post",
+				url: ServerURL + "/SystemConfig/getSystemConfigInfo",
+				data: { cid: parent.Id },
+				dataType: "json",
+				success: function (response) {
+					if (response.code == 200) {
+						form.val('MyForm', response.data)
+						form.render();
+					} else {
+						layer.msg(response.msg, { time: 3000 }, function () {
+						});
+					}
+				}
+			});
+
+
+
+
+
+		});
+	</script>
+
+</body>
+
+</html>

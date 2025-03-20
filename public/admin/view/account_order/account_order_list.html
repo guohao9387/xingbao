@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<form class="layui-form" lay-filter="search_form" action="">
+				<div class="layui-form-item">
+					<label class="layui-form-label">游戏类型</label>
+					<div class="layui-input-inline">
+						<select lay-filter="gid" lay-search="" name="gid">
+							<option value="">请选择</option>
+						</select>
+					</div>
+
+					<label class="layui-form-label">订单单号</label>
+					<div class="layui-input-inline">
+						<input type="text" name="order_sn" placeholder="请输入订单号" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">支付状态</label>
+					<div class="layui-input-inline">
+						<select lay-filter="pay_status" lay-search="" name="pay_status">
+						</select>
+					</div>
+
+					<label class="layui-form-label">订单状态</label>
+					<div class="layui-input-inline">
+						<select lay-filter="order_status" lay-search="" name="order_status">
+							<option value="">请选择</option>
+						</select>
+					</div>
+
+					<label class="layui-form-label">买家用户名</label>
+					<div class="layui-input-inline">
+						<input type="text" name="buy_username" placeholder="请输入买家用户名" class="layui-input">
+					</div>
+
+					<label class="layui-form-label">卖家用户名</label>
+					<div class="layui-input-inline">
+						<input type="text" name="sell_username" placeholder="请输入卖家用户名" class="layui-input">
+					</div>
+				
+
+					<label class="layui-form-label"></label>
+					<div class="layui-input-inline">
+						<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+							<i class="layui-icon layui-icon-search"></i>
+							查询
+						</button>
+						<button type="reset" class="pear-btn pear-btn-md">
+							<i class="layui-icon layui-icon-refresh"></i>
+							重置
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="layui-card">
+		<div class="layui-card-body">
+			<table id="table_list" lay-filter="table_list"></table>
+		</div>
+	</div>
+
+
+	<script type="text/html" id="table-bar">
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="modify_info"><i class="layui-icon layui-icon-edit"></i>查看详情</button>
+		<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="check_game_account">查看商品</button>
+		<!-- <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="delete_info"><i class="layui-icon layui-icon-delete"></i>删除</button> -->
+	</script>
+
+
+
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['table', 'form', 'jquery'], function () {
+			let table = layui.table;
+			let form = layui.form;
+			let $ = layui.jquery;
+			var layer = layui.layer;
+            var util = layui.util;
+			table.render({
+				elem: '#table_list',
+				url: ServerURL + "/AccountOrder/getAccountOrderList",
+				page: true,
+				limits: [10, 20, 50, 100],
+				totalRow: true,
+				autoSort: false,
+				cols: [[
+					// { type: 'checkbox', align: "left", totalRowText: '合计' },
+					{ field: 'oid', title: '编号', align: "center" },
+					{ field: 'order_sn', title: '单号', align: "center" },
+					{ field: 'game_name', title: '游戏类型', align: "center" },
+					// { field: 'account_title', title: '商品标题', align: "center" },
+					{ field: 'buy_username', title: '买家用户名', align: "center" },
+					{ field: 'sell_username', title: '卖家用户名', align: "center" },
+					{ field: 'account_amount', title: '订单金额', align: "center" },
+					{ field: 'server_amount', title: '手续费', align: "center" },
+					{ field: 'amount', title: '到账金额', align: "center" },
+					{ field: 'create_time', title: '创建时间', align: "center" },
+					{field: 'pay_status', title: '支付状态', templet: function(d) {
+						if (d.pay_status === 1) {
+							return '<span style="color: red;">'+d.pay_status_text+'</span>';
+						} else if (d.pay_status === 2){
+							return '<span style="color: blue;">'+d.pay_status_text+'</span>';
+						} else{
+							return d.pay_status_text;
+						}
+					}
+					},
+					{field: 'order_status', title: '打款状态', templet: function(d) {
+                        if (d.order_status === 2) {
+                            return '<span style="color: red;">'+d.order_status_text+'</span>';
+                        } else if (d.order_status === 3){
+                            return '<span style="color: blue;">'+d.order_status_text+'</span>';
+                        } else{
+                            return  d.order_status_text;
+                        }
+                    }
+					},
+					{ field: 'order_status', title: '审核',  templet: function(d) {
+                        if (d.order_status === 2) {
+                            return '<button class="pear-btn  layui-bg-blue pear-btn-sm" oid='+d.oid+' lay-on="pass-confirm">确认打款</button>';
+                        } else{
+                            return '';
+                        }
+                    }, width: 200, align: "center", fixed: 'right', }
+                    ,{ title: '操作', toolbar: '#table-bar', width: 300, align: "center", align: 'left', fixed: 'right', }
+				]],
+				skin: 'line',
+				headers: { "login-token": LoginToken },
+				toolbar: '#table-toolbar',
+				defaultToolbar: [{
+					layEvent: 'refresh',
+					icon: 'layui-icon-refresh',
+				}, 'filter', 'print', 'exports'],
+				parseData: function (res) { //res 即为原始返回的数据
+					return {
+						"code": res.code == 200 ? 0 : 1, //解析接口状态
+						"msg": res.msg, //解析提示文本
+						"count": res.data.count, //解析数据长度
+						"data": res.data.list //解析数据列表
+					};
+				},
+				done: function (res, curr, count) {
+
+				}
+			});
+
+			util.on('lay-on', {
+                "pass-confirm": function(obj){
+                    var oid = obj.attr('oid');
+                    layer.confirm('确认通过？', {icon: 3}, function(){
+                        $.ajax({
+                            type: "post",
+                            url: ServerURL + "/AccountOrder/modifyAccountOrder",
+                            data: { oid: oid, order_status: 3},
+                            dataType: "json",
+                            success: function (response) {
+                                layer.msg(response.msg, {time: 1000}, function () {
+                                    if (response.code == 200) {
+                                        layui.table.reload('table_list', {}, 'json');//刷新父级页面
+                                    }
+                                });
+                            }
+                        });
+
+                        return false;
+                    }, function(){
+                        layer.msg('已取消');
+                    });
+                }
+            });
+
+
+			//监听排序事件 
+			table.on('sort(table_list)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				data = $("form").serializeArray();
+				whereObj = {}
+				whereObj.sort = obj.type
+				whereObj.order = obj.field
+				$.each(data, function (indexInArray, valueOfElement) {
+					whereObj[valueOfElement.name] = valueOfElement.value;
+				});
+				table.reload('table_list', {
+					initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+					, where: whereObj
+				});
+			});
+
+
+			table.on('tool(table_list)', function (obj) {
+				if (obj.event === 'modify_info') {
+					window.modify_info(obj);
+				} else if (obj.event === 'delete_info') {
+					window.delete_info(obj);
+				}
+				else if (obj.event === 'check_game_account') {
+					window.check_game_account(obj);
+				}
+			});
+
+			table.on('toolbar(table_list)', function (obj) {
+				if (obj.event === 'create_info') {
+					window.create_info();
+				} else if (obj.event === 'refresh') {
+					window.refresh();
+				}
+			});
+
+			form.on('submit(table-query)', function (data) {
+				table.reload('table_list', {
+					where: data.field
+				})
+				return false;
+			});
+
+
+			// window.create_info = function () {
+			// 	var index = layer.open({
+			// 		title: '创建',
+			// 		type: 2,
+			// 		shade: 0.2,
+			// 		maxmin: true,
+			// 		shadeClose: true,
+			// 		area: ['80%', '80%'],
+			// 		content: '../bannerr/bannerr_create.html',
+			// 	})
+			// 	$(window).on('resize', function () {
+			// 		layer.full(index)
+			// 	})
+			// }
+			window.check_game_account = function (obj) {
+				Id = obj.data.aid
+				var index = layer.open({
+					title: '查看详情',
+					type: 2,
+					shade: 0.2,
+					maxmin: true,
+					shadeClose: true,
+					area: ['80%', '80%'],
+					content: '../game/game_account_modify.html',
+				})
+				$(window).on('resize', function () {
+					layer.full(index)
+				})
+			}
+			window.modify_info = function (obj) {
+				Id = obj.data.oid
+				var index = layer.open({
+					title: '修改',
+					type: 2,
+					shade: 0.2,
+					maxmin: true,
+					shadeClose: true,
+					area: ['80%', '80%'],
+					content: '../account_order/account_order_modify.html',
+				})
+				$(window).on('resize', function () {
+					layer.full(index)
+				})
+			}
+			window.delete_info = function (obj) {
+				layer.confirm('确定要删除该信息', {
+					icon: 3,
+					title: '提示'
+				}, function (index) {
+					layer.close(index);
+					let loading = layer.load();
+					$.ajax({
+						type: 'post',
+						url: ServerURL + "/AccountOrder/deleteAccountOrder",
+						dataType: 'json',
+						data: { aid: obj.data.aid },
+						success: function (result) {
+							layer.close(loading);
+							layer.msg(result.msg, {
+								icon: 1,
+								time: 1000
+							}, function () {
+								if (result.code == 200) {
+									obj.del();
+								}
+							});
+						}
+					})
+				});
+			}
+
+			window.refresh = function (param) {
+				table.reload('table_list');
+			}
+
+			window.initializeSelect(ServerURL + "/Game/getGameList", 'gid');
+			window.initializeSelect(ServerURL + "/AccountOrder/getPayStatusData", 'pay_status');
+			window.initializeSelect(ServerURL + "/AccountOrder/getOrderStatusData", 'order_status');
+        	form.render();
+			//输出接口
+			function InitSelect(url, node, data) {
+				$.ajax({
+					type: "POST",
+					url: url,
+					data: data,
+					dataType: "json",
+					async: false,
+					success: function (data) {
+						var list = data.data.list;
+						$("select[name='" + node + "']").html('');
+						var option = document.createElement("option");
+						option.setAttribute("value", '');
+						option.innerText = '请选择';
+						$("select[name='" + node + "']").append(option)
+						if (list != null || list.size() > 0) {
+							for (var c in list) {
+								var option = document.createElement("option");
+								option.setAttribute("value", list[c].gid);
+								option.innerText = list[c].name;
+								$("select[name='" + node + "']").append(option)
+							}
+						}
+						;
+
+					}
+				});
+			}
+
+		})
+
+	</script>
+</body>
+
+</html>

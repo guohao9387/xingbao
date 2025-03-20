@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title></title>
+    <link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+<div class="layui-row layui-col-space10">
+    <div class="layui-col-md12">
+
+        <div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+            <form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+                <input type="text" name="uid" class="layui-input layui-hide">
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">父级ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="pid" placeholder="请输入" class="layui-input">
+                    </div>
+                </div> -->
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">编号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="number" placeholder="请输入" class="layui-input">
+                    </div>
+                </div> -->
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">是否靓号</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="is_special_number" value="1" title="正常">
+                        <input type="radio" name="is_special_number" value="2" title="靓号">
+
+                    </div>
+                </div> -->
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="user_name" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">昵称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="nick_name" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">用户头像</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="image" placeholder="请输入" class="layui-input layui-hide">
+                        <div class="layui-upload">
+                            <!-- <button type="button" class="pear-btn pear-btn-primary pear-btn-sm"
+                                    id="image">上传图片
+                            </button> -->
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="image_show" style="height:50px">
+                                <p id="image_text"></p>
+                            </div>
+                            <div style="width: 95px;display: none;" id="image_percent">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes"
+                                     lay-filter="image_percent">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="0" title="未知">
+                        <input type="radio" name="sex" value="1" title="男">
+                        <input type="radio" name="sex" value="2" title="女">
+                    </div>
+                </div> -->
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">出生日期</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="birthday" placeholder="请输入" class="layui-input">
+                    </div>
+                </div> -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">登录状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="login_status" value="1" title="正常" >
+                        <input type="radio" name="login_status" value="2" title="禁用" >
+
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">实名状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="real_status" value="1" title="待实名" >
+                        <input type="radio" name="real_status" value="2" title="审核中" >
+                        <input type="radio" name="real_status" value="3" title="审核通过" >
+                        <input type="radio" name="real_status" value="4" title="审核拒绝" >
+
+
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">真实姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="real_name" placeholder="" class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="card_id" placeholder="" class="layui-input" >
+                    </div>
+                </div>
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">身份证正面</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="card_image_z" placeholder="请输入" class="layui-input layui-hide">
+                        <div class="layui-upload">
+                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm"
+                                    id="card_image_z">上传图片
+                            </button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="card_image_z_show" style="height:50px">
+                                <p id="card_image_z_text"></p>
+                            </div>
+                            <div style="width: 95px;display: none;" id="card_image_z_percent">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes"
+                                     lay-filter="card_image_z_percent">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div> -->
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">身份证反面</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="card_image_f" placeholder="请输入" class="layui-input layui-hide">
+                        <div class="layui-upload">
+                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm"
+                                    id="card_image_f">上传图片
+                            </button>
+                            <div class="layui-upload-list">
+                                <img class="layui-upload-img" id="card_image_f_show" style="height:50px">
+                                <p id="card_image_f_text"></p>
+                            </div>
+                            <div style="width: 95px;display: none;" id="card_image_f_percent">
+                                <div class="layui-progress layui-progress-big" lay-showpercent="yes"
+                                     lay-filter="card_image_f_percent">
+                                    <div class="layui-progress-bar" lay-percent=""></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div> -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付宝姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="alipay_real_name" placeholder="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">支付宝账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="alipay_account" placeholder="" class="layui-input">
+                    </div>
+                </div>
+
+
+
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">转账权限</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="transfer_status" value="1" title="禁止">
+                        <input type="radio" name="transfer_status" value="2" title="允许">
+                    </div>
+                </div> -->
+
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">自我赠送礼物权限</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="give_self_gift_status" value="1" title="是">
+                        <input type="radio" name="give_self_gift_status" value="2" title="否">
+                    </div>
+                </div> -->
+
+                <!-- <div class="layui-form-item"> -->
+                    <!-- <label class="layui-form-label">测试用户</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="test_status" value="1" title="否">
+                        <input type="radio" name="test_status" value="2" title="是">
+                    </div>
+                </div> -->
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账户余额</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="money" placeholder="请输入" class="layui-input" readonly disabled>
+                    </div>
+                </div>
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">金币</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="integral" placeholder="请输入" class="layui-input" readonly disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">魅力值</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="charm_value" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">贡献值</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="contribution_value" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">所属公会ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="union_id" placeholder="请输入" class="layui-input" readonly disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">房间ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="open_id" placeholder="请输入" class="layui-input" readonly disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关注数量</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="follow_num" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">粉丝数量</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="fans_num" placeholder="请输入" class="layui-input" readonly disabled>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邀请码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="invite_code" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div> -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="create_time" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">更新时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="update_time" placeholder="请输入" class="layui-input" readonly
+                               disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+                                lay-filter="saveBtn">立即提交
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+<script src="../../component/layui/layui.js"></script>
+<script src="../../component/pear/pear.js"></script>
+
+<script>
+    layui.use(['form', 'element', 'upload', 'laydate', 'util'], function () {
+        var form = layui.form;
+        var element = layui.element;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        var util = layui.util;
+        var $ = layui.$;
+        form.on('submit(saveBtn)', function (data) {
+            // data.field.birthday = Date.parse(data.field.birthday) / 1000;
+            $.ajax({
+                type: "post",
+                url: ServerURL + "/User/modifyUser",
+                data: data.field,
+                dataType: "json",
+                success: function (response) {
+                    layer.msg(response.msg, {time: 1000}, function () {
+                        if (response.code == 200) {
+                            parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭
+                            parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+                        }
+                    });
+                }
+            });
+
+            return false;
+        });
+
+        $.ajax({
+            type: "post",
+            url: ServerURL + "/User/getUserInfo",
+            data: {uid: parent.Id},
+            dataType: "json",
+            success: function (response) {
+                if (response.code == 200) {
+                    // response.data.birthday = util.toDateString(response.data.birthday, 'yyyy-MM-dd')
+                    $("#image_show").attr('src', response.data.image);
+                    // $("#card_image_z_show").attr('src', response.data.card_image_z);
+                    // $("#card_image_f_show").attr('src', response.data.card_image_f);
+                    form.val('MyForm', response.data)
+                    form.render();
+                } else {
+                    layer.msg(response.msg, {time: 3000}, function () {
+                    });
+                }
+            }
+        });
+
+        // //常规用法
+        // laydate.render({
+        //     elem: "input[name='birthday']"
+        //     , type: 'date'
+        // });
+        // window.uploadImage($("input[name='image']"), "image", "user_image")//上传图片
+        // window.uploadImage($("input[name='card_image_z']"), "card_image_z", "user_card")//上传图片
+        // window.uploadImage($("input[name='card_image_f']"), "card_image_f", "user_card")//上传图片
+    });
+
+</script>
+
+</body>
+
+</html>

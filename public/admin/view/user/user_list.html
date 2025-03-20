@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="search_form" action="">
+                <div class="layui-form layui-row layui-col-space16">
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">Id</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="uid" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">父级ID</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="pid" placeholder="" class="layui-input">
+                        </div>
+                    </div> -->
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="user_name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">昵称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="nick_name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="number" placeholder="" class="layui-input">
+                        </div>
+                    </div> -->
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="real_name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="card_id" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">测试账号</label>
+                        <div class="layui-input-inline">
+                            <select name="test_status" lay-search=""></select>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="layui-form-item">
+                    <!-- <label class="layui-form-label">在线状态</label>
+            <div class="layui-input-inline">
+                <select name="online_status" lay-search="">
+                    <option value="">请选择</option>
+                    <option value="1">离线</option>
+                    <option value="2">在线</option>
+                </select>
+            </div> -->
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="user-toolbar">
+        <!-- <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="create_info">   <i class="layui-icon layui-icon-add-1"></i>新增</button> -->
+    </script>
+
+    <script type="text/html" id="user-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="modify_info"><i
+                class="layui-icon layui-icon-edit"></i>编辑
+        </button>
+        <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="modify_money"><i
+                class="layui-icon layui-icon-edit"></i>调节资金
+        </button>
+    </script>
+    <script type="text/html" id="image">
+        <img src="{{d.image}}" onclick="window.viewImage(this)" style="height:30px; "/>
+    </script>
+    <!-- <script type="text/html" id="create_time">
+{{layui.util.toDateString(d.create_time, 'yyyy-MM-dd HH:mm:ss')}}
+</script> -->
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+
+        layui.use(['table', 'form', 'jquery'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            table.render({
+                elem: '#table_list',
+                url: ServerURL + "/User/getUserList",
+                page: true,
+                limits: [10, 20, 50, 100],
+                totalRow: true,
+                autoSort: false,
+                cols: [[
+                    { type: 'checkbox', align: "left", totalRowText: '合计' },
+                    { field: 'uid', title: 'ID', align: "center", sort: true, },
+                    { field: 'user_name', title: '用户名', align: "center", },
+                    { field: 'nick_name', title: '昵称', align: "center", },
+                    // { field: 'image', title: '头像', align: "center", templet: '#image' },
+                    { field: 'money', title: '账户余额', align: "center", sort: true, },
+                    { field: 'real_status_text', title: '实名状态', align: "center" },
+                    { field: 'create_time', title: '创建时间', },
+                    { field: 'create_ip', title: '注册IP', },
+
+                    { title: '操作', toolbar: '#user-bar', width: 200, align: "center", align: 'left', fixed: 'right', }
+                ]],
+                skin: 'line',
+                headers: { "login-token": LoginToken },
+                toolbar: '#user-toolbar',
+                defaultToolbar: [{
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "code": res.code == 200 ? 0 : 1, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.count, //解析数据长度
+                        "data": res.data.list, //解析数据列表
+                        "totalRow": res.data.totalRow, //解析数据长度
+                    };
+                },
+                done: function (res, curr, count) {
+
+                }
+            });
+            //监听排序事件
+            table.on('sort(table_list)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                data = $("form").serializeArray();
+                whereObj = {}
+                whereObj.sort = obj.type
+                whereObj.order = obj.field
+                $.each(data, function (indexInArray, valueOfElement) {
+                    whereObj[valueOfElement.name] = valueOfElement.value;
+                });
+                table.reload('table_list', {
+                    initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                    , where: whereObj
+                });
+            });
+
+            table.on('tool(table_list)', function (obj) {
+                if (obj.event === 'modify_info') {
+                    window.modify_info(obj);
+                } else if (obj.event === 'modify_money') {
+                    window.modify_money(obj);
+                }
+            });
+
+            table.on('toolbar(table_list)', function (obj) {
+                if (obj.event === 'refresh') {
+                    window.refresh();
+                }
+            });
+
+            form.on('submit(user-query)', function (data) {
+                table.reload('table_list', {
+                    where: data.field,
+                    page: {
+                        curr: 1
+                    }
+                })
+                return false;
+            });
+
+
+            window.modify_info = function (obj) {
+                Id = obj.data.uid
+                var index = layer.open({
+                    title: '修改',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: '../user/user_modify.html',
+                })
+                $(window).on('resize', function () {
+                    layer.full(index)
+                })
+            }
+
+            window.modify_money = function (obj) {
+                Id = obj.data.uid
+                var index = layer.open({
+                    title: '调节资金',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: '../user/user_modify_money.html',
+                })
+                $(window).on('resize', function () {
+                    layer.full(index)
+                })
+            }
+            window.refresh = function (param) {
+                table.reload('table_list');
+            }
+            // window.initializeSelect(ServerURL + "/User/searchTestStatusData", 'test_status');
+            form.render();
+        })
+    </script>
+</body>
+
+</html>

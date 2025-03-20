@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="role_name" placeholder="" class="layui-input">
+                    </div>
+                    <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                        <i class="layui-icon layui-icon-search"></i>
+                        查询
+                    </button>
+                    <button type="reset" class="pear-btn pear-btn-md">
+                        <i class="layui-icon layui-icon-refresh"></i>
+                        重置
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="user-toolbar">
+		<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="create_info">   <i class="layui-icon layui-icon-add-1"></i>新增</button>
+	</script>
+
+    <script type="text/html" id="user-bar">
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="modify_info"><i class="layui-icon layui-icon-add-1"></i>修改</button>
+		<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="delete_info"><i class="layui-icon layui-icon-delete"></i>删除</button>
+		
+	</script>
+
+
+
+
+    <script type="text/html" id="create_time">
+		{{layui.util.toDateString(d.create_time, 'yyyy-MM-dd HH:mm:ss')}}
+	</script>
+
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+        layui.use(['table', 'form', 'jquery', 'drawer', 'dropdown'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let drawer = layui.drawer;
+            let dropdown = layui.dropdown;
+
+
+            table.render({
+                elem: '#table_list',
+                url: ServerURL + "/AdminRole/getAdminRoleList",
+                page: true,
+                limits: [1, 10, 100],
+                cols: [[
+                    { type: 'checkbox', align: "left", },
+                    { field: 'rid', title: 'ID', align: "center", },
+                    { field: 'role_name', title: '角色名称', align: "center", },
+                    { field: 'create_time', title: '创建时间' },
+                    { title: '操作', toolbar: '#user-bar', align: "center", align: 'left', fixed: 'right', }
+                ]],
+                skin: 'line',
+                headers: { "login-token": LoginToken },
+                toolbar: '#user-toolbar',
+                defaultToolbar: [{
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                parseData: function (res) { //res 即为原始返回的数据
+                    returnData = {
+                        "code": 1, //解析接口状态
+                        "msg": "加载中", //解析提示文本
+                        "count": 0, //解析数据长度
+                        "data": {} //解析数据列表
+                    };
+                    if (res.data != undefined) {
+                        return {
+                            "code": res.code == 200 ? 0 : 1, //解析接口状态
+                            "msg": res.msg, //解析提示文本
+                            "count": res.data.count, //解析数据长度
+                            "data": res.data.list //解析数据列表
+                        };
+                    }
+                    return returnData;
+                },
+                done: function (res, curr, count) {
+
+                }
+            });
+
+            table.on('tool(table_list)', function (obj) {
+                if (obj.event === 'modify_info') {
+                    window.modify_info(obj);
+                } else if (obj.event === 'delete_info') {
+                    window.delete_info(obj);
+                }
+            });
+
+            table.on('toolbar(table_list)', function (obj) {
+                if (obj.event === 'create_info') {
+                    window.create_info();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                }
+            });
+
+            form.on('submit(user-query)', function (data) {
+                table.reload('table_list', {
+                    where: data.field,
+                    page: {
+                        curr: 1
+                    },
+
+                })
+                return false;
+            });
+
+
+            window.create_info = function () {
+                var index = layer.open({
+                    title: '创建',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: '../admin_role/admin_role_create.html',
+                })
+                $(window).on('resize', function () {
+                    layer.full(index)
+                })
+            }
+
+            window.modify_info = function (obj) {
+                Id = obj.data.rid
+                var index = layer.open({
+                    title: '修改',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin: true,
+                    shadeClose: true,
+                    area: ['80%', '80%'],
+                    content: '../admin_role/admin_role_modify.html',
+                })
+                $(window).on('resize', function () {
+                    layer.full(index)
+                })
+            }
+
+            window.delete_info = function (obj) {
+                layer.confirm('确定要删除该信息', {
+                    icon: 3,
+                    title: '提示'
+                }, function (index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        type: 'post',
+                        url: ServerURL + "/AdminRole/deleteAdminRole",
+                        dataType: 'json',
+                        data: { rid: obj.data.rid },
+                        success: function (result) {
+                            layer.close(loading);
+                            layer.msg(result.msg, {
+                                icon: 1,
+                                time: 1000
+                            }, function () {
+                                if (result.code == 200) {
+                                    obj.del();
+                                }
+                            });
+                        }
+                    })
+                });
+            }
+
+            window.refresh = function (param) {
+                table.reload('table_list');
+            }
+        })
+
+    </script>
+</body>
+
+</html>

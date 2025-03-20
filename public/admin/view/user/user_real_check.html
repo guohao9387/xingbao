@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="../../component/pear/css/pear.css" />
+</head>
+
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" lay-filter="search_form" action="">
+                <div class="layui-form layui-row layui-col-space16">
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">Id</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="rid" placeholder="" class="layui-input">
+                        </div>
+                    </div> -->
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">父级ID</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="pid" placeholder="" class="layui-input">
+                        </div>
+                    </div> -->
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="username" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                   
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">审核状态</label>
+                        <div class="layui-input-inline">
+                            <select name="status" lay-search="">
+                                <option value="">请选择</option>
+                           
+                            </select>
+                        </div> 
+                    </div>
+                    <!-- <div class="layui-col-md3">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="real_name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">身份证号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="card_id" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md3">
+                        <label class="layui-form-label">测试账号</label>
+                        <div class="layui-input-inline">
+                            <select name="test_status" lay-search=""></select>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="layui-form-item">
+                    
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table_list" lay-filter="table_list"></table>
+        </div>
+    </div>
+
+    <script type="text/html" id="user-toolbar">
+        <!-- <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="create_info"> 
+              批量审核通过</button> -->
+    </script>
+    <script type="text/html" id="user-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="modify_info"><i
+                class="layui-icon layui-icon-edit"></i>编辑
+        </button>
+    </script>
+    <script src="../../component/layui/layui.js"></script>
+    <script src="../../component/pear/pear.js"></script>
+    <script>
+
+        layui.use(['table', 'form', 'jquery'], function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            var layer = layui.layer;
+            var util = layui.util;
+            
+            
+
+            table.render({
+                elem: '#table_list',
+                url: ServerURL + "/UserRealCheck/getUserRealCheckList",
+                page: true,
+                limits: [10, 20, 50, 100],
+                totalRow: true,
+                autoSort: false,
+                cols: [[
+                    { type: 'checkbox', align: "left", totalRowText: '' },
+                    { field: 'rid', title: 'ID', align: "center", sort: true, },
+                    // { field: 'uid', title: '父级ID', hide: true, align: "center", },
+                    // { field: 'number', title: '编号', align: "center", },
+                    { field: 'username', title: '用户名', align: "center", },
+                    { field: 'real_name', title: '真实姓名', align: "center", },
+                    { field: 'card_id', title: '身份证号', align: "center", templet: '#image' },
+                    // { field: 'status', title: '审核状态', align: "center", sort: true, },
+                    {field: 'status', title: '审核状态', templet: function(d) {
+                        if (d.status === 2) {
+                            return '<span style="color: #009688;">'+d.status_text+'</span>';
+                        } else if (d.status === 3) {
+                            return '<span style="color: #1E9FFF;">'+d.status_text+'</span>';
+                        } else {
+                            return '<span style="color: #FF5722;">'+d.status_text+'</span>';
+                      }
+                    }}, 
+                    // { field: 'integral', title: '金币', align: "center", sort: true, },
+                    // { field: 'gift_piece', title: '礼物碎片', align: "center", sort: true, },
+                    // { field: 'charm_value', title: '魅力值', align: "center", sort: true, },
+                    // { field: 'contribution_value', title: '贡献值', align: "center", sort: true, },
+                    // { field: 'real_status_text', title: '实名状态', align: "center" },
+                    // { field: 'follow_num', title: '关注数量', align: "center", hide: true, sort: true, },
+                    // { field: 'fans_num', title: '粉丝数量', align: "center", sort: true, },
+                    // { field: 'invite_code', title: '邀请码', hide: true, align: "center", },
+                    // { field: 'online_status_text', title: '在线状态', align: "center", },
+                    // { field: 'robot_status_text', title: '用户类型', hide: true, align: "center", },
+                    // { field: 'test_status_text', title: '用户类型', align: "center", },
+                    // { field: 'give_self_gift_status_text', title: '自我赠送', align: "center", },
+                    { field: 'create_time', title: '创建时间', },
+                    { field: 'update_time', title: '更新时间', },
+                    {field: 'status', title: '操作', templet: function(d) {
+                        if (d.status === 2) {
+                        // console.log(d.rid);
+                            return '<button type="button" class="layui-btn  layui-btn-xs " rid='+d.rid+' lay-on="pass-confirm">审核通过</button><button type="button" class="layui-btn layui-btn-warm  layui-btn-xs" rid='+d.rid+' lay-on="refuse-confirm">审核拒绝</button>';
+                        } else{
+                            return '';
+                        }
+                    }}, 
+                    // { title: '操作', toolbar: '#user-bar', width: 200, align: "center", align: 'left', fixed: 'right', }
+                ]],
+                skin: 'line',
+                headers: { "login-token": LoginToken },
+                toolbar: '#user-toolbar',
+                defaultToolbar: [{
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                parseData: function (res) { //res 即为原始返回的数据
+                    return {
+                        "code": res.code == 200 ? 0 : 1, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "count": res.data.count, //解析数据长度
+                        "data": res.data.list, //解析数据列表
+                        "totalRow": res.data.totalRow, //解析数据长度
+                    };
+                },
+                done: function (res, curr, count) {
+
+                }
+            });
+
+
+            util.on('lay-on', {
+                "pass-confirm": function(obj){
+                    var rid = obj.attr('rid');
+                    console.log(rid);
+                    layer.confirm('确认通过？', {icon: 3}, function(){
+                        $.ajax({
+                            type: "post",
+                            url: ServerURL + "/UserRealCheck/modifyUserRealCheck",
+                            data: { rid: rid, status: 3},
+                            dataType: "json",
+                            success: function (response) {
+                                layer.msg(response.msg, {time: 1000}, function () {
+                                    if (response.code == 200) {
+                                        layui.table.reload('table_list', {}, 'json');//刷新父级页面
+                                    }
+                                });
+                            }
+                        });
+
+                        return false;
+                    }, function(){
+                        layer.msg('已取消');
+                    });
+                },
+                "refuse-confirm": function(obj){
+                    var rid = obj.attr('rid');
+                    console.log(rid);
+                    layer.confirm('确认拒绝？', {icon: 3}, function(){
+                        $.ajax({
+                            type: "post",
+                            url: ServerURL + "/UserRealCheck/modifyUserRealCheck",
+                            data: { rid: rid, status: 4 },
+                            dataType: "json",
+                            success: function (response) {
+                                layer.msg(response.msg, {time: 1000}, function () {
+                                    if (response.code == 200) {
+                                        layui.table.reload('table_list', {}, 'json');//刷新父级页面
+                                    }
+                                });
+                            }
+                        });
+
+                        return false;
+                    }, function(){
+                        layer.msg('已取消');
+                    });
+                }
+                
+            });
+
+
+         
+
+            //监听排序事件
+            table.on('sort(table_list)', function (obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                data = $("form").serializeArray();
+                whereObj = {}
+                whereObj.sort = obj.type
+                whereObj.order = obj.field
+                $.each(data, function (indexInArray, valueOfElement) {
+                    whereObj[valueOfElement.name] = valueOfElement.value;
+                });
+                table.reload('table_list', {
+                    initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+                    , where: whereObj
+                });
+            });
+
+            table.on('tool(table_list)', function (obj) {
+                if (obj.event === 'modify_info') {
+                    window.modify_info(obj);
+                } else if (obj.event === 'modify_money') {
+                    window.modify_money(obj);
+                }
+            });
+
+            table.on('toolbar(table_list)', function (obj) {
+                if (obj.event === 'refresh') {
+                    window.refresh();
+                }
+            });
+
+            form.on('submit(user-query)', function (data) {
+                table.reload('table_list', {
+                    where: data.field,
+                    page: {
+                        curr: 1
+                    }
+                })
+                return false;
+            });
+       
+            window.refresh = function (param) {
+                table.reload('table_list');
+            }
+            window.initializeSelect(ServerURL + "/UserRealCheck/getStatusData", 'status');
+            form.render();
+        })
+    </script>
+</body>
+
+</html>

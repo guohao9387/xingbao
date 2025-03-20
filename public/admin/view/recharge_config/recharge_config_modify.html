@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>创建</title>
+	<link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md12">
+
+			<div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+				<form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+					<input type="text" name="cid" placeholder="请输入" class="layui-input layui-hide">
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">支付金额</label>
+						<div class="layui-input-block">
+							<input type="text" name="money" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">赠送金币数量</label>
+						<div class="layui-input-block">
+							<input type="text" name="integral" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">首充赠送</label>
+						<div class="layui-input-block">
+							<input type="radio" name="first_status" value="1" title="不赠送" checked>
+							<input type="radio" name="first_status" value="2" title="赠送">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">选择装扮</label>
+						<div class="layui-input-block">
+							<div class="layui-col-md12">
+								<div id="ID-transfer-demo-showSearch"></div>
+							</div>
+						</div>
+					</div>
+
+				
+					<div class="layui-form-item">
+						<label class="layui-form-label">创建时间</label>
+						<div class="layui-input-block">
+							<input type="text" name="create_time" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">更新时间</label>
+						<div class="layui-input-block">
+							<input type="text" name="update_time" placeholder="请输入" class="layui-input" disabled>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+								lay-filter="saveBtn">立即提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['form', 'element', 'tinymce', 'transfer'], function () {
+			var form = layui.form;
+			var element = layui.element;
+			var transfer = layui.transfer;
+
+			var $ = layui.$;
+
+			form.on('submit(saveBtn)', function (data) {
+				var getData = transfer.getData('attr_list'); // 获取右侧数据
+				data.field.attr_list = getData.map(v => { return v.value })
+				if (data.field.attr_list == 0) {
+					data.field.attr_list = JSON.stringify([]);
+				}
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/RechargeConfig/modifyRechargeConfig",
+					data: data.field,
+					dataType: "json",
+					success: function (response) {
+						layer.msg(response.msg, { time: 1000 }, function () {
+							if (response.code == 200) {
+								parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭 
+								parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+							}
+						});
+					}
+				});
+
+				return false;
+			});
+			//parent.Id=7;
+			$.ajax({
+				type: "post",
+				url: ServerURL + "/RechargeConfig/getRechargeConfig",
+				data: { cid: parent.Id },
+				dataType: "json",
+				success: function (response) {
+					if (response.code == 200) {
+						getTransferData(response.data.attr_list);
+						form.val('MyForm', response.data)
+						form.render();
+					} else {
+						layer.msg(response.msg, { time: 3000 }, function () {
+						});
+					}
+				}
+			});
+
+			
+			function getTransferData(value) {
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/Attire/getAttireList",
+					data: {page:1,limit: 9999 },
+					dataType: "json",
+					async: false,
+					success: function (response) {
+						if (response.code == 200) {
+							UserData = [];
+							$.each(response.data.list, function (i, v) {
+								UserData.push({ value: v.aid, title: v.name })
+							});
+							// 渲染
+							transfer.render({
+								elem: '#ID-transfer-demo-showSearch',
+								data: UserData,
+								title: ['可选装扮', '已选装扮'],
+								showSearch: true,
+								value:value,
+								id: 'attr_list', // 定义唯一索引
+								onchange:function(obj,index){
+									// var transferData=transfer.getData('cases_header') ;	
+									// headerData=[];
+									// $.each(transferData, function (indexInArray, valueOfElement) {
+									// 		var lsData = [];
+									// 		lsData['name'] = valueOfElement.title;
+									// 		lsData['agree_status'] = 1;
+									// 		lsData['view'] = '';
+									// 		headerData.push(lsData);
+									// });
+									// casesHeaderData(headerData)
+								}
+							});
+							form.render();
+						} else {
+							layer.msg(response.msg, { time: 3000 }, function () {
+
+							});
+						}
+					}
+				});
+			}
+
+
+
+
+
+		});
+	</script>
+
+</body>
+
+</html>

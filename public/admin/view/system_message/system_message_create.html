@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		note="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>创建</title>
+	<link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md12">
+
+			<div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+				<form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">标题</label>
+						<div class="layui-input-block">
+							<input type="text" name="title" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">说明</label>
+						<div class="layui-input-block">
+							<textarea name="content" id="content" placeholder="请输入" class="layui-textarea"></textarea>
+						</div>
+					</div>
+					<!-- <div class="layui-form-item" style="display: none;">
+						<label class="layui-form-label">推送状态</label>
+						<div class="layui-input-block">
+							<input type="radio" name="push_type" value="1" title="不推送" checked>
+							<input type="radio" name="push_type" value="2" title="推送（在线用户即时收到）">
+						</div>
+					</div> -->
+
+
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+								lay-filter="saveBtn">立即提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['form', 'element', 'tinymce'], function () {
+			var form = layui.form;
+			var element = layui.element;
+			var tinymce = layui.tinymce
+			var $ = layui.$;
+
+			var content = tinymce.render({
+				elem: "#content",
+				height: 400,
+				images_upload_url: ServerURL + "/Upload/tinymceFileUpload",
+				convert_urls: false //这个参数加上去就可以了
+			});
+
+			form.on('submit(saveBtn)', function (data) {
+				data.field.content = content.getContent();
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/SystemMessage/createSystemMessage",
+					data: data.field,
+					dataType: "json",
+					success: function (response) {
+						layer.msg(response.msg, { time: 1000 }, function () {
+							if (response.code == 200) {
+								parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭 
+								parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+							}
+						});
+					}
+				});
+
+				return false;
+			});
+
+
+
+
+		});
+	</script>
+
+</body>
+
+</html>

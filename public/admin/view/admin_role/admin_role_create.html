@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title>创建</title>
+	<link href="../../component/pear/css/pear.css" rel="stylesheet">
+</head>
+
+<body class="pear-container">
+	<div class="layui-row layui-col-space10">
+		<div class="layui-col-md12">
+
+			<div class="layui-card" style="margin-top: 10px; padding-top: 20px;padding-bottom: 20px;">
+				<form class="layui-form" action="" lay-filter="MyForm" autocomplete="off">
+					<div class="layui-form-item">
+						<label class="layui-form-label">角色名称</label>
+						<div class="layui-input-block">
+							<input type="text" name="role_name" placeholder="请输入" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label ">权限列表</label>
+						<div class="layui-input-inline">
+							<div id="auth_div">
+							</div>
+						</div>
+
+					</div>
+
+
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="pear-btn pear-btn-primary pear-btn-sm" lay-submit
+								lay-filter="saveBtn">立即提交</button>
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+	<script src="../../component/layui/layui.js"></script>
+	<script src="../../component/pear/pear.js"></script>
+	<script>
+		layui.use(['form', 'element', 'tree'], function () {
+			var form = layui.form;
+			var element = layui.element;
+			var tree = layui.tree;
+			var $ = layui.$;
+			form.on('submit(saveBtn)', function (data) {
+				$.ajax({
+					type: "post",
+					url: ServerURL + "/AdminRole/createAdminRole",
+					data: data.field,
+					dataType: "json",
+					success: function (response) {
+						layer.msg(response.msg, { time: 1000 }, function () {
+							if (response.code == 200) {
+								parent.layer.close(parent.layer.getFrameIndex(window.name)); //先得到当前iframe层的索引,再执行关闭 
+								parent.layui.table.reload('table_list', {}, 'json');//刷新父级页面
+							}
+						});
+					}
+				});
+
+				return false;
+			});
+
+			$.ajax({
+				type: "post",
+				url: ServerURL + "/AdminMenu/getAllMenuData",
+				dataType: "json",
+				success: function (response) {
+					if (response.code == 200) {
+						tree.render({
+							elem: '#auth_div'
+							, data: response.data
+							, showCheckbox: true  //是否显示复选框
+							, isJump: false //是否允许点击节点时弹出新窗口跳转
+							// , click: function (obj) {
+							//     var data = obj.data;  //获取当前点击的节点数据
+							//     layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+							// }
+						});
+					}
+				}
+			});
+
+
+			/*
+			tree.render({
+				elem: '#auth_div'
+				, data: menu_data
+				, showCheckbox: true  //是否显示复选框
+				, id: 'demoId1'
+				, isJump: false //是否允许点击节点时弹出新窗口跳转
+				// , click: function (obj) {
+				//     var data = obj.data;  //获取当前点击的节点数据
+				//     layer.msg('状态：' + obj.state + '<br>节点数据：' + JSON.stringify(data));
+				// }
+			});
+
+			*/
+
+
+
+		});
+	</script>
+
+</body>
+
+</html>
